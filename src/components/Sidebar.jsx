@@ -1,9 +1,8 @@
 import React from 'react';
-import { LayoutDashboard, FileText, Search, Settings, ShieldCheck, LogOut, Flag } from 'lucide-react';
+import { LayoutDashboard, FileText, Search, Settings, ShieldCheck, LogOut, Flag, CheckSquare, Inbox } from 'lucide-react';
 
-
-const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
-    const menuItems = [
+const Sidebar = ({ activeTab, setActiveTab, onLogout, isAdmin }) => {
+    const citizenMenuItems = [
         { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { id: 'documents', icon: FileText, label: 'My Records' },
         { id: 'search', icon: Search, label: 'Public Search' },
@@ -11,6 +10,14 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
         { id: 'settings', icon: Settings, label: 'Settings' },
     ];
 
+    const adminMenuItems = [
+        { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+        { id: 'complaints', icon: Inbox, label: 'Complaints' },
+        { id: 'verifications', icon: CheckSquare, label: 'Verifications' },
+        { id: 'settings', icon: Settings, label: 'Settings' },
+    ];
+
+    const menuItems = isAdmin ? adminMenuItems : citizenMenuItems;
 
     return (
         <div className="sidebar glass-panel">
@@ -20,7 +27,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
                 </div>
                 <div className="logo-text">
                     <h2>LandSecure</h2>
-                    <span>Digital Records Portal</span>
+                    <span>{isAdmin ? 'Admin Portal' : 'Digital Records Portal'}</span>
                 </div>
             </div>
 
@@ -38,10 +45,10 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout }) => {
             </nav>
 
             <div className="user-profile">
-                <div className="user-avatar">RK</div>
+                <div className="user-avatar">{isAdmin ? 'AD' : 'RK'}</div>
                 <div className="user-info">
-                    <h4>Rajesh</h4>
-                    <span>Citizen</span>
+                    <h4>{isAdmin ? 'System Admin' : 'Rajesh'}</h4>
+                    <span>{isAdmin ? 'Authority' : 'Citizen'}</span>
                 </div>
                 <button className="logout-btn" onClick={onLogout} title="Logout">
                     <LogOut size={18} />

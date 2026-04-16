@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, UploadCloud, CheckCircle, File } from 'lucide-react';
 
-const UploadModal = ({ onClose }) => {
+const UploadModal = ({ onClose, onAddRequest }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -44,11 +44,31 @@ const UploadModal = ({ onClose }) => {
                 if (prev >= 100) {
                     clearInterval(interval);
                     setUploadStatus('success');
+                    
+                    // Emit payload to App
+                    if (onAddRequest) {
+                        onAddRequest({
+                            fileName: file.name,
+                            docType: getDocTypeLabel(docType)
+                        });
+                    }
+                    
                     return 100;
                 }
                 return prev + 10;
             });
         }, 200);
+    };
+
+    const getDocTypeLabel = (value) => {
+        switch(value) {
+            case 'ownership': return 'Title Transfer';
+            case 'tax': return 'Property Tax Record';
+            case 'survey': return 'Mutation';
+            case 'legal': return 'Legal Assessment';
+            case 'other': return 'Other Request';
+            default: return 'Document Upload';
+        }
     };
 
     return (
@@ -66,7 +86,7 @@ const UploadModal = ({ onClose }) => {
                         <div className="upload-success">
                             <CheckCircle size={64} className="success-icon" />
                             <h3>Upload Successful!</h3>
-                            <p>Your document has been securely uploaded and is pending verification.</p>
+                            <p>Your document has been securely uploaded and is pending verification by an Admin.</p>
                             <button className="glass-button" onClick={onClose}>Done</button>
                         </div>
                     ) : (
@@ -108,9 +128,9 @@ const UploadModal = ({ onClose }) => {
                                     onChange={(e) => setDocType(e.target.value)}
                                     style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.05)', color: 'white', border: '1px solid rgba(255, 255, 255, 0.1)', outline: 'none' }}
                                 >
-                                    <option value="ownership" style={{ color: 'black' }}>Ownership Document (Sale Deed/Title)</option>
+                                    <option value="ownership" style={{ color: 'black' }}>Ownership Document (Title Transfer)</option>
+                                    <option value="survey" style={{ color: 'black' }}>Survey Map / Plan (Mutation)</option>
                                     <option value="tax" style={{ color: 'black' }}>Property Tax Receipt</option>
-                                    <option value="survey" style={{ color: 'black' }}>Survey Map / Plan</option>
                                     <option value="legal" style={{ color: 'black' }}>Legal / Encumbrance Certificate</option>
                                     <option value="other" style={{ color: 'black' }}>Other</option>
                                 </select>

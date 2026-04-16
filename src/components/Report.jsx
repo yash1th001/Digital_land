@@ -1,46 +1,75 @@
 import React, { useState } from 'react';
 
-const Report = () => {
-    const [reportType, setReportType] = useState('');
-
-    const [description, setDescription] = useState('');
+const Report = ({ onAddComplaint }) => {
+    const [issue, setIssue] = useState('');
+    const [name, setName] = useState('');
+    const [mobileNo, setMobileNo] = useState('');
+    const [ownerOfLand, setOwnerOfLand] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle report submission logic here
-        console.log('Report submitted:', { reportType, description });
-        alert('Report submitted successfully!');
-        setDescription('');
+        
+        if (onAddComplaint) {
+            onAddComplaint({ issue, name, mobileNo, ownerOfLand });
+        }
+        
+        console.log('Complaint submitted:', { issue, name, mobileNo, ownerOfLand });
+        alert('Complaint submitted successfully!');
+        setIssue('');
+        setName('');
+        setMobileNo('');
+        setOwnerOfLand('');
     };
 
     return (
         <div className="report-container glass-panel">
-            <h2>Report an Issue</h2>
+            <h2>Complaint Form</h2>
             <form onSubmit={handleSubmit} className="report-form">
                 <div className="form-group">
-                    <label>Type of Report</label>
+                    <label>Name</label>
                     <input
                         type="text"
-                        value={reportType}
-                        onChange={(e) => setReportType(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="form-control"
-                        placeholder="e.g. Bug Report, Feature Request"
+                        placeholder="Your Name"
                         required
                     />
-
                 </div>
                 <div className="form-group">
-                    <label>Description</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                    <label>Mobile No</label>
+                    <input
+                        type="tel"
+                        value={mobileNo}
+                        onChange={(e) => setMobileNo(e.target.value)}
                         className="form-control"
-                        rows="5"
-                        placeholder="Describe the issue or feature request..."
+                        placeholder="Your Mobile Number"
                         required
                     />
                 </div>
-                <button type="submit" className="submit-btn">Submit Report</button>
+                <div className="form-group">
+                    <label>Owner of Land</label>
+                    <input
+                        type="text"
+                        value={ownerOfLand}
+                        onChange={(e) => setOwnerOfLand(e.target.value)}
+                        className="form-control"
+                        placeholder="Name of Land Owner"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Issue</label>
+                    <textarea
+                        value={issue}
+                        onChange={(e) => setIssue(e.target.value)}
+                        className="form-control"
+                        rows="5"
+                        placeholder="Describe the issue..."
+                        required
+                    />
+                </div>
+                <button type="submit" className="submit-btn">Submit Complaint</button>
             </form>
             <style jsx>{`
                 .report-container {
