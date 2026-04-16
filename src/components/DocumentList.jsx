@@ -2,11 +2,25 @@ import React, { useState } from 'react';
 import { Search, Filter, Download, Eye, Plus, FileText } from 'lucide-react';
 import { MOCK_DOCUMENTS } from '../data/mockData';
 
-const DocumentList = ({ onUpload }) => {
+const DocumentList = ({ onUpload, requests = [] }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('all');
 
-    const filteredDocs = MOCK_DOCUMENTS.filter(doc => {
+    const formattedRequests = requests.map(req => ({
+        id: req.id,
+        title: `${req.proofs[0] || 'Document'} - ${req.type}`,
+        type: req.type.toLowerCase().includes('tax') ? 'tax' : 
+              req.type.toLowerCase().includes('survey') ? 'survey' :
+              req.type.toLowerCase().includes('legal') ? 'legal' : 'ownership',
+        date: new Date(req.submissionDate).toISOString().split('T')[0],
+        size: 'Pending Check',
+        status: req.status.toLowerCase(),
+        plotId: req.propertyId
+    }));
+
+    const allDocs = [...formattedRequests, ...MOCK_DOCUMENTS];
+
+    const filteredDocs = allDocs.filter(doc => {
         const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             doc.plotId.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = filterType === 'all' || doc.type === filterType;

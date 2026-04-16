@@ -74,7 +74,7 @@ function App() {
         setRequests([{
             id: `REQ-10${requests.length + 1}`,
             type: newReq.docType || 'Document Upload',
-            applicant: currentUserId || 'User',
+            applicant: currentUserId === 'user' ? 'Rajesh Kumar' : (currentUserId || 'User'),
             propertyId: 'PROP-NEW',
             submissionDate: new Date().toISOString(),
             status: 'Pending',
